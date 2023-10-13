@@ -33,7 +33,7 @@ pipeline {
         }
         stage('Docker build') {
             steps {
-                sh 'docker buildx build -t my-app .'
+                sh 'docker buildx build -t ${env.BUILD_ID}my-app .'
             }
         }
         stage('Docker login') {
@@ -43,31 +43,31 @@ pipeline {
         }
         stage('Docker tag') {
             steps {
-                sh 'docker tag my-app allwinkennethj/my-app'
+                sh 'docker tag my-app allwinkennethj/${env.BUILD_ID}my-app'
             }
         }
         stage('Docker image push') {
             steps {
-                sh 'docker push allwinkennethj/my-app'
+                sh 'docker push allwinkennethj/${env.BUILD_ID}my-app'
             }
         }
-        // stage('SonarQube Analysis') {
-        //     environment {
-        //         SONAR_PROJECT_KEY = 'crudproject'
-        //         SONAR_HOST_URL = 'http://44.212.16.212'
-        //         SONAR_LOGIN = '3ce4f49c643fcf9992f491a0d5c73881a1fe488f'
-        //         scannerHome = tool 'sonarserver'
-        //     }
-        //     steps {
-        //         withSonarQubeEnv('sonarserver') {
-        //             sh """
-        //             \${scannerHome}/bin/sonar-scanner \
-        //                 -Dsonar.projectKey=\${SONAR_PROJECT_KEY} \
-        //                 -Dsonar.host.url=\${SONAR_HOST_URL} \
-        //                 -Dsonar.login=\${SONAR_LOGIN}
-        //             """
-        //         }
-        //     }
-        // }
+        stage('SonarQube Analysis') {
+            environment {
+                SONAR_PROJECT_KEY = 'crudproject'
+                SONAR_HOST_URL = 'http://44.212.16.212'
+                SONAR_LOGIN = '3ce4f49c643fcf9992f491a0d5c73881a1fe488f'
+                scannerHome = tool 'sonarserver'
+            }
+            steps {
+                withSonarQubeEnv('sonarserver') {
+                    sh """
+                    \${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=\${SONAR_PROJECT_KEY} \
+                        -Dsonar.host.url=\${SONAR_HOST_URL} \
+                        -Dsonar.login=\${SONAR_LOGIN}
+                    """
+                }
+            }
+        }
     }
 }
