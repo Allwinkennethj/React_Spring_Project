@@ -33,22 +33,22 @@ pipeline {
         }
         stage('Docker build') {
             steps {
-                sh 'docker buildx build -t ${env.BUILD_ID}my-app .'
+                sh "docker buildx build -t ${env.BUILD_ID}my-app ."
             }
         }
-        stage('Docker login') {
+        stage('Docker build') {
             steps {
-                sh 'docker login -u allwinkennethj -p J@ck#kord82qrnm7ptv' 
+                sh "docker buildx build -t ${env.BUILD_ID}my-app ."
             }
         }
         stage('Docker tag') {
             steps {
-                sh 'docker tag my-app allwinkennethj/${env.BUILD_ID}my-app'
+                sh "docker tag my-app allwinkennethj/${env.BUILD_ID}my-app"
             }
         }
         stage('Docker image push') {
             steps {
-                sh 'docker push allwinkennethj/${env.BUILD_ID}my-app'
+                sh "docker push allwinkennethj/${env.BUILD_ID}my-app"
             }
         }
         stage('SonarQube Analysis') {
